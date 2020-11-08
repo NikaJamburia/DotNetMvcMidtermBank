@@ -36,7 +36,7 @@ namespace BankMidterm.Controllers
         // GET: Clients
         public ActionResult Index()
         {
-            return View(database.Clients.ToList());
+            return View(clientRepository.getAll());
         }
 
         // GET: Clients/Details/5
@@ -46,7 +46,7 @@ namespace BankMidterm.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = database.Clients.Find(id);
+            Client client = clientRepository.getById(id.Value);
             if (client == null)
             {
                 return HttpNotFound();
@@ -81,7 +81,7 @@ namespace BankMidterm.Controllers
             performAdditionalValidation(ModelState, client);
             if (ModelState.IsValid)
             {
-                database.Clients.Add(client);
+                clientRepository.save(client);
                 database.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -108,7 +108,7 @@ namespace BankMidterm.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = database.Clients.Find(id);
+            Client client = clientRepository.getById(id.Value);
             if (client == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace BankMidterm.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = database.Clients.Find(id);
+            Client client = clientRepository.getById(id.Value);
             if (client == null)
             {
                 return HttpNotFound();
@@ -155,9 +155,7 @@ namespace BankMidterm.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Client client = database.Clients.Find(id);
-            database.Clients.Remove(client);
-            database.SaveChanges();
+            clientRepository.delete(id);
             return RedirectToAction("Index");
         }
 
