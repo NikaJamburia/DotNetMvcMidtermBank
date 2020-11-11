@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Dynamic;
 using System.Linq;
 using System.Net;
+using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
@@ -57,9 +58,14 @@ namespace BankMidterm.Controllers
         // GET: Clients/Create
         public ActionResult Create()
         {
-            ViewBag.Cities = database.Cities.ToList();
-            ViewBag.Countries = database.Countries.ToList();
+            using(TransactionScope scope = new TransactionScope())
+            {
+                ViewBag.Cities = database.Cities.ToList();
+                ViewBag.Countries = database.Countries.ToList();
+                scope.Complete();
+            }
             return View();
+
         }
 
         // POST: Clients/Create
